@@ -1,0 +1,11 @@
+language: c
+sudo: required
+
+services:
+  - docker
+
+install:
+  - docker build -t test .
+
+script:
+  - docker run test
