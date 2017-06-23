@@ -29,7 +29,7 @@ ENV LD_LIBRARY_PATH /root/torch/install/lib:$LD_LIBRARY_PATH
 ENV DYLD_LIBRARY_PATH /root/torch/install/lib:$DYLD_LIBRARY_PATH
 ENV LUA_CPATH '/root/torch/install/lib/?.so;'$LUA_CPATH
 
-RUN	luarocks install dpnn; \
+RUN luarocks install dpnn; \
 	luarocks install nn; \
 	luarocks install cutorch; \
 	luarocks install cunn;
@@ -37,6 +37,18 @@ RUN	luarocks install dpnn; \
 RUN git clone https://github.com/soumith/cudnn.torch -b R6; \
 	cd cudnn.torch; \
 	luarocks make;
+
+# Install OpenResty
+RUN wget -qO - https://openresty.org/package/pubkey.gpg | sudo apt-key add -; \
+	add-apt-repository -y "deb http://openresty.org/package/ubuntu $(lsb_release -sc) main"; \
+	apt update;
+
+RUN apt install -y --no-install-recommends \
+	openresty;
+
+# Install Lua Lapis
+
+RUN luarocks install lapis;
 
 EXPOSE 8080:8080
 
