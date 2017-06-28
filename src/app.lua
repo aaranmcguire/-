@@ -3,8 +3,15 @@ local configuration = require("lapis.config").get()
 local respond_to = require("lapis.application").respond_to
 local app = lapis.Application()
 
-app:get("/*", function()
+app:get("/(*)", function(self)
 	self:write({"Not Found", status = 404})
+end)
+
+-- Predict Endpoint
+app:get("/predict", function(self)
+	local require("")
+
+
 end)
 
 -- Dataset Endpoints
