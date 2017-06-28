@@ -47,7 +47,7 @@ app:get("/predict", function(self)
 	-- We'll make a nice output later, giving the labels not the label index.
 	return {
 		json = {
-			["one"] = 100 - math.max(confidences[1],1)..'%',
+			["one"] = (100 - math.max(confidences[1],1))/100,
 			["two"] = indices[1]
 		}
 	}
