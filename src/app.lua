@@ -43,11 +43,11 @@ app:get("/predict", function(self)
 
 	local prediction = module:forward(data:cuda())
 	local confidences, indices = torch.sort(prediction, true)
-	
+
 	-- We'll make a nice output later, giving the labels not the label index.
 	return {
 		json = {
-			["one"] = confidences[1],
+			["one"] = 100 - math.max(confidences[1],1)..'%',
 			["two"] = indices[1]
 		}
 	}
