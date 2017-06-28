@@ -9,11 +9,11 @@ end)
 
 -- Predict Endpoint
 app:get("/predict", function(self)
-	local require("nn")
-	local require("torch")
-	local require("cutorch")
-	local require("cunn")
-	local require("cudnn")
+	require("nn")
+	require("torch")
+	require("cutorch")
+	require("cunn")
+	require("cudnn")
 
 	-- We'll read in the correct path later.
 	local module = torch.load(paths.concat(".", "TestModel.t7"))
