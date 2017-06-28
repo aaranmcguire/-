@@ -9,8 +9,8 @@ end)
 
 -- Predict Endpoint
 app:get("/predict", function(self)
-	local require("")
-
+	-- local require("")
+	self:write({"Not Found", status = 404})
 
 end)
 
