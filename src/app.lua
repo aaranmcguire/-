@@ -21,8 +21,7 @@ app:get("/predict", function(self)
 	module:evaluate()
 
 	-- We'll read from POST later.
-	local input = self.params.text or '';
-	print(input)
+	local input = self.params.text:lower() or '';
 
 	-- Process input --
 
@@ -32,8 +31,7 @@ app:get("/predict", function(self)
 		dict[alphabet:sub(i,i)] = i
 	end
 
-	local data = torch.Tensor(1024, #alphabet) -- 1024 may be able to be done dynamicly.
-	data:zero();
+	local data = torch.Tensor(1024, #alphabet):zero() -- 1024 may be able to be done dynamicly.
 
 	for i = #input, math.max(#input - 1024 + 1, 1), -1 do
       if dict[input:sub(i,i)] then
@@ -41,18 +39,16 @@ app:get("/predict", function(self)
       end
    	end
 
-   	print(type(data))
-
 	-- Predict --
 
-	local prediction = module:forward(data)
+	local prediction = module:forward(data:cuda())
 	local confidences, indices = torch.sort(prediction, true)
 	
 	-- We'll make a nice output later, giving the labels not the label index.
 	return {
 		json = {
-			one = confidences,
-			two = indices
+			["one"] = confidences[1],
+			["two"] = indices[1]
 		}
 	}
 
