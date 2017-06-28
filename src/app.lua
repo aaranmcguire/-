@@ -16,7 +16,7 @@ app:get("/predict", function(self)
 	require("cudnn")
 
 	-- We'll read in the correct path later.
-	local module = torch.load(paths.concat(".", "TestModel.t7"))
+	local module = torch.load("TestModel.t7")
 	module = module:cuda()
 	module:evaluate()
 
@@ -28,7 +28,7 @@ app:get("/predict", function(self)
 
 	local alphabet = "abcdefghijklmnopqrstuvwxyz0123456789-,;.!?:'\"/\\|_@#$%^&*~`+-=<>()[]{}"
 	local dict = {}
-	for i = 1,#alphabet do
+	for i = 1, #alphabet do
 		dict[alphabet:sub(i,i)] = i
 	end
 
@@ -41,7 +41,7 @@ app:get("/predict", function(self)
       end
    	end
 
-   	print(data)
+   	print(type(data))
 
 	-- Predict --
 
