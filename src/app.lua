@@ -9,8 +9,31 @@ end)
 
 -- Predict Endpoint
 app:get("/predict", function(self)
-	-- local require("")
-	self:write({"Not Found", status = 404})
+	local require("nn")
+	local require("torch")
+	local require("cutorch")
+	local require("cunn")
+	local require("cudnn")
+
+	-- We'll read in the correct path later.
+	local module = torch.load(paths.concat(".", "TestModel.t7"))
+	print(paths.concat(".", "TestModel.t7"))
+	module = module:cuda()
+	module:evaluate()
+
+	-- We'll read from POST later.
+	local input = self.params.text or '';
+
+	local prediction = module:forward(input)
+	local confidences, indices = torch.sort(prediction, true)
+	
+	-- We'll make a nice output later, giving the labels not the label index.
+	return {
+		json = {
+			one = confidences,
+			two = indices
+		}
+	}
 
 end)
 
