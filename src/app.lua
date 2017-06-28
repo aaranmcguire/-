@@ -17,12 +17,12 @@ app:get("/predict", function(self)
 
 	-- We'll read in the correct path later.
 	local module = torch.load(paths.concat(".", "TestModel.t7"))
-	print(paths.concat(".", "TestModel.t7"))
 	module = module:cuda()
 	module:evaluate()
 
 	-- We'll read from POST later.
 	local input = self.params.text or '';
+	print(input)
 
 	-- Process input --
 
@@ -40,6 +40,8 @@ app:get("/predict", function(self)
          data[#input - i + 1][dict[input:sub(i,i)]] = 1;
       end
    	end
+
+   	print(data)
 
 	-- Predict --
 
