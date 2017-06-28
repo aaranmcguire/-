@@ -24,7 +24,26 @@ app:get("/predict", function(self)
 	-- We'll read from POST later.
 	local input = self.params.text or '';
 
-	local prediction = module:forward(input)
+	-- Process input --
+
+	local alphabet = "abcdefghijklmnopqrstuvwxyz0123456789-,;.!?:'\"/\\|_@#$%^&*~`+-=<>()[]{}"
+	local dict = {}
+	for i = 1,#alphabet do
+		dict[alphabet:sub(i,i)] = i
+	end
+
+	local data = torch.Tensor(1024, #alphabet) -- 1024 may be able to be done dynamicly.
+	data:zero();
+
+	for i = #input, math.max(#input - 1024 + 1, 1), -1 do
+      if dict[input:sub(i,i)] then
+         data[#input - i + 1][dict[input:sub(i,i)]] = 1;
+      end
+   	end
+
+	-- Predict --
+
+	local prediction = module:forward(data)
 	local confidences, indices = torch.sort(prediction, true)
 	
 	-- We'll make a nice output later, giving the labels not the label index.
