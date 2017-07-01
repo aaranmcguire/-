@@ -33,9 +33,9 @@ app:get("/predict", function(self)
 		dict[alphabet:sub(i,i)] = i
 	end
 
-	local data = torch.Tensor(1024, #alphabet):zero() -- 1024 may be able to be done dynamicly.
+	local data = torch.Tensor(#input, #alphabet):zero() -- 1024 may be able to be done dynamicly.
 
-	for i = #input, math.max(#input - 1024 + 1, 1), -1 do
+	for i = #input, math.max(#input - #input + 1, 1), -1 do
       if dict[input:sub(i,i)] then
          data[#input - i + 1][dict[input:sub(i,i)]] = 1;
       end
