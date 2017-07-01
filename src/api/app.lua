@@ -48,9 +48,8 @@ app:get("/predict", function(self)
 	-- We'll make a nice output later, giving the labels not the label index.
 	return {
 		json = {
-			util.to_json(torch.sort(prediction, true))
 			-- ["confidences"] = (100 - math.max(confidences[1],1))/100,
-			--["prediction"] = indices[1]
+			["prediction"] = indices[1]
 		}
 	}
 end)
