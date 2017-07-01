@@ -2,6 +2,7 @@ local lapis = require("lapis")
 local configuration = require("lapis.config").get()
 local respond_to = require("lapis.application").respond_to
 local json_params = require("lapis.application").json_params
+local util = require("lapis.util")
 local encoding = require("lapis.util.encoding")
 local app = lapis.Application()
 
@@ -88,7 +89,7 @@ app:match("/dataset(/:id)", respond_to({
 
 		return {
 			json = {
-				encoding.to_json(dataset)
+				util.to_json(dataset)
 			}
 		}
 	end),
