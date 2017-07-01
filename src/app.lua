@@ -89,15 +89,11 @@ app:match("/train(/:id)", respond_to({
 	end,
 	GET = function(self)
 		-- Return all Training Sessions or single Training Session.
-		if self.dataset then
-			return {
-				json = {
-					self.dataset
-				}
+		return {
+			json = {
+				["Result"] = self.dataset || TrainingSession:select(nil)
 			}
-		else
-			TrainingSession:select(nil)
-		end
+		}
 	end,
 	POST = json_params(function(self)
 		-- Create new Training Session.
