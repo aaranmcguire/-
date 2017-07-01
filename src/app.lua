@@ -7,8 +7,8 @@ local encoding = require("lapis.util.encoding")
 local app = lapis.Application()
 
 -- Models
-local Dataset = require("api/models/dataset")
-local TrainingSession = require("api/models/trainingsession")
+local Dataset = require("models/dataset")
+local TrainingSession = require("models/trainingsession")
 
 -- Predict Endpoint
 app:get("/predict", function(self)
