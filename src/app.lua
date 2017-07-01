@@ -58,7 +58,7 @@ end)
 -- Dataset Endpoints
 app:match("/dataset(/:id)", respond_to({
 	before = function(self)
-		if type(self.params.id) ~= nil then
+		if not self.params.id then
 			self.dataset = Dataset:find(self.params.id)
 			if not self.dataset then
 				self:write({"Not Found", status = 404})
@@ -80,7 +80,7 @@ app:match("/dataset(/:id)", respond_to({
 -- Training Endpoints
 app:match("/train(/:id)", respond_to({
 	before = function(self)
-		if type(self.params.id) ~= nil then
+		if not self.params.id then
 			print(type(self.params.id))
 			self.dataset = TrainingSession:find(self.params.id)
 			if not self.dataset then
@@ -90,7 +90,7 @@ app:match("/train(/:id)", respond_to({
 	end,
 	GET = function(self)
 		-- Return all Training Sessions or single Training Session.
-		if type(self.dataset) ~= nil then
+		if not self.dataset then
 			return {
 				json = {
 					self.dataset
