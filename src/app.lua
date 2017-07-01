@@ -57,7 +57,6 @@ end)
 -- Dataset Endpoints
 app:match("/dataset(/:id)", respond_to({
 	before = function(self)
-		local Dataset = require("models/dataset")
 		if type(self.params.id) ~= null then
 			self.dataset = Dataset:find(self.params.id)
 			if not self.dataset then
@@ -68,11 +67,12 @@ app:match("/dataset(/:id)", respond_to({
 	GET = function(self)
 		-- Return all datasets or single dataset.
 	end,
-	POST = function(self)
+	POST = json_params(function(self)
 		-- Create new dataset.
-	end,
+	end),
 	DELETE = function(self)
 		-- Delete dataset.
+		self.dataset:delete()
 	end
 }))
 
@@ -88,12 +88,22 @@ app:match("/train(/:id)", respond_to({
 	end,
 	GET = function(self)
 		-- Return all Training Sessions or single Training Session.
+		if type(self.dataset) ~= null then
+			return {
+				json = {
+					self.dataset
+				}
+			}
+		else
+			TrainingSession:select(null)
+		end
 	end,
-	POST = function(self)
+	POST = json_params(function(self)
 		-- Create new Training Session.
-	end,
+	end),
 	DELETE = function(self)
-		-- Delete Training Session.
+		-- Delete dataset.
+		self.dataset:delete()
 	end
 }))
 
