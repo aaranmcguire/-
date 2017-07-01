@@ -11,7 +11,7 @@ local Dataset = require("models/dataset")
 local TrainingSession = require("models/trainingsession")
 
 -- Predict Endpoint
-app:get("predict", function(self)
+app:get("/predict", function(self)
 	local nn = require("nn")
 	local torch = require("torch")
 	local cutorch = require("cutorch")
@@ -55,7 +55,7 @@ app:get("predict", function(self)
 end)
 
 -- Dataset Endpoints
-app:match("dataset(/:id)", respond_to({
+app:match("/dataset(/:id)", respond_to({
 	before = function(self)
 		if self.params.id then
 			self.dataset = Dataset:find(self.params.id)
@@ -94,7 +94,7 @@ app:match("dataset(/:id)", respond_to({
 }))
 
 -- Training Endpoints
-app:match("train(/:id)", respond_to({
+app:match("/train(/:id)", respond_to({
 	before = function(self)
 		if self.params.id then
 			self.dataset = TrainingSession:find(self.params.id)
