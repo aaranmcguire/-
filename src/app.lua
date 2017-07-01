@@ -129,7 +129,7 @@ app:match("api/train(/:id)", respond_to({
 }))
 
 -- 404 Wildcard Endpoint
-app:get("api/(*)", function(self)
+app:get("/(*)", function(self)
 	self:write({"Not Found", status = 404})
 end)
 
