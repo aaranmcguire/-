@@ -78,7 +78,7 @@ app:match("/dataset(/:id)", respond_to({
 	POST = json_params(function(self)
 		-- Create new dataset.
 		Dataset:create({
-			["id"] = hmac_sha1(os.time(), self.params.name),
+			["id"] = encoding.hmac_sha1(os.time(), self.params.name),
 			["name"] = self.params.name,
 			["type"] = self.params.type,
 			["data_location"] = self.params.data_location,
