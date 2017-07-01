@@ -27,7 +27,6 @@ app:get("/predict", function(self)
 	local input = self.params.text:lower() or '';
 
 	-- Process input --
-
 	local alphabet = "abcdefghijklmnopqrstuvwxyz0123456789-,;.!?:'\"/\\|_@#$%^&*~`+-=<>()[]{}"
 	local dict = {}
 	for i = 1, #alphabet do
@@ -43,18 +42,17 @@ app:get("/predict", function(self)
    	end
 
 	-- Predict --
-
 	local prediction = module:forward(data:cuda())
 	local confidences, indices = torch.sort(prediction, true)
 
 	-- We'll make a nice output later, giving the labels not the label index.
 	return {
 		json = {
+			util.to_json(torch.sort(prediction, true))
 			-- ["confidences"] = (100 - math.max(confidences[1],1))/100,
-			["prediction"] = indices[1]
+			--["prediction"] = indices[1]
 		}
 	}
-
 end)
 
 -- Dataset Endpoints
@@ -69,27 +67,24 @@ app:match("/dataset(/:id)", respond_to({
 	end,
 	GET = function(self)
 		-- Return all datasets or single dataset.
-		local results = self.dataset or Dataset:select(nil)
 		return {
 			json = {
-				["Result"] = results
+				["Result"] = self.dataset or Dataset:select(nil)
 			}
 		}
 	end,
 	POST = json_params(function(self)
 		-- Create new dataset.
-		local dataset = Dataset:create({
-			["id"] = encoding.encode_base64(os.time() .. self.params.name),
-			["name"] = self.params.name,
-			["type"] = self.params.type,
-			["data_location"] = self.params.data_location,
-			["alphabet"] = self.params.alphabet,
-			["max_length"] = self.params.max_length
-		});
-
 		return {
 			json = {
-				util.to_json(dataset)
+				Dataset:create({
+					["id"] = encoding.encode_base64(os.time() .. self.params.name),
+					["name"] = self.params.name,
+					["type"] = self.params.type,
+					["data_location"] = self.params.data_location,
+					["alphabet"] = self.params.alphabet,
+					["max_length"] = self.params.max_length
+				});
 			}
 		}
 	end),
@@ -111,15 +106,22 @@ app:match("/train(/:id)", respond_to({
 	end,
 	GET = function(self)
 		-- Return all Training Sessions or single Training Session.
-		local results = self.dataset or TrainingSession:select(nil)
 		return {
 			json = {
-				["Result"] = results
+				["Result"] = self.dataset or TrainingSession:select(nil)
 			}
 		}
 	end,
 	POST = json_params(function(self)
 		-- Create new Training Session.
+		return {
+			json = {
+				Dataset:create({
+					["id"] = encoding.encode_base64(os.time() .. self.params.name),
+					["name"] = self.params.name
+				});
+			}
+		}
 	end),
 	DELETE = function(self)
 		-- Delete dataset.
@@ -131,6 +133,5 @@ app:match("/train(/:id)", respond_to({
 app:get("/(*)", function(self)
 	self:write({"Not Found", status = 404})
 end)
-
 
 return app
