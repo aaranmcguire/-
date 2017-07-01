@@ -45,6 +45,10 @@ app:get("/predict", function(self)
 	local prediction = module:forward(data:cuda())
 	local confidences, indices = torch.sort(prediction, true)
 
+	module = nil;
+	data = nil;
+	collectgarbage();
+
 	-- We'll make a nice output later, giving the labels not the label index.
 	return {
 		json = {
