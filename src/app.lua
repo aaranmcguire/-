@@ -77,7 +77,7 @@ app:match("/dataset(/:id)", respond_to({
 	end,
 	POST = json_params(function(self)
 		-- Create new dataset.
-		Dataset:create({
+		local dataset = Dataset:create({
 			["id"] = encoding.encode_base64(os.time() .. self.params.name),
 			["name"] = self.params.name,
 			["type"] = self.params.type,
@@ -85,6 +85,12 @@ app:match("/dataset(/:id)", respond_to({
 			["alphabet"] = self.params.alphabet,
 			["max_length"] = self.params.max_length
 		});
+
+		return {
+			json = {
+				encoding.to_json(dataset)
+			}
+		}
 	end),
 	DELETE = function(self)
 		-- Delete dataset.
