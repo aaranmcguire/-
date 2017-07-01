@@ -6,19 +6,17 @@ local util = require("lapis.util")
 local encoding = require("lapis.util.encoding")
 local app = lapis.Application()
 
---- For Predict Endpoint
-local nn = require("nn")
-local torch = require("torch")
-local cutorch = require("cutorch")
-local cunn = require("cunn")
-local cudnn = require("cudnn")
-
 -- Models
 local Dataset = require("models/dataset")
 local TrainingSession = require("models/trainingsession")
 
 -- Predict Endpoint
 app:get("/predict", function(self)
+	local nn = require("nn")
+	local torch = require("torch")
+	local cutorch = require("cutorch")
+	local cunn = require("cunn")
+	local cudnn = require("cudnn")
 
 	-- We'll read in the correct path later.
 	local module = torch.load("TestModel.t7")
@@ -47,14 +45,13 @@ app:get("/predict", function(self)
 	local prediction = module:forward(data:cuda())
 	local confidences, indices = torch.sort(prediction, true)
 
-	module = nil;
-	data = nil;
+	-- Free Memory!
+	module, data, input, dict, alphabet, prediction  = nil, nil, nil, nil, nil, nil;
 	collectgarbage();
 
 	-- We'll make a nice output later, giving the labels not the label index.
 	return {
 		json = {
-			-- ["confidences"] = (100 - math.max(confidences[1],1))/100,
 			["prediction"] = indices[1]
 		}
 	}
