@@ -67,7 +67,7 @@ app:match("/dataset(/:id)", respond_to({
 	end,
 	GET = function(self)
 		-- Return all datasets or single dataset.
-		local results = self.dataset || Dataset:select(nil)
+		local results = self.dataset or Dataset:select(nil)
 		return {
 			json = {
 				["Result"] = results
@@ -102,7 +102,7 @@ app:match("/train(/:id)", respond_to({
 	end,
 	GET = function(self)
 		-- Return all Training Sessions or single Training Session.
-		local results = self.dataset || TrainingSession:select(nil)
+		local results = self.dataset or TrainingSession:select(nil)
 		return {
 			json = {
 				["Result"] = results
