@@ -3,7 +3,7 @@ local types = schema.types
 
 return {
 	[1] = function()
-		schema.create_table ("FiberDatasets", {
+		schema.create_table("FiberDatasets", {
 			{"id", types.text};
 			{"name", types.text};
 			{"type", types.integer}; -- 1 = Training; 2 = Validation
@@ -18,7 +18,7 @@ return {
 	end;
 
 	[2] = function()
-		schema.create_table ("FiberTrainingSessions", {
+		schema.create_table("FiberTrainingSessions", {
 			{"id", types.text};
 			{"name", types.text};
 			{"dataset", types.text}; -- Link to Dataset.

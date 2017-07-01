@@ -3,17 +3,17 @@ local configuration = require("lapis.config").get()
 local respond_to = require("lapis.application").respond_to
 local app = lapis.Application()
 
-app:get("/(*)", function(self)
-	self:write({"Not Found", status = 404})
-end)
+-- Models
+local Dataset = require("models/dataset")
+local TrainingSession = require("models/trainingsession")
 
 -- Predict Endpoint
 app:get("/predict", function(self)
-	require("nn")
-	require("torch")
-	require("cutorch")
-	require("cunn")
-	require("cudnn")
+	local nn = require("nn")
+	local torch = require("torch")
+	local cutorch = require("cutorch")
+	local cunn = require("cunn")
+	local cudnn = require("cudnn")
 
 	-- We'll read in the correct path later.
 	local module = torch.load("TestModel.t7")
@@ -57,6 +57,7 @@ end)
 -- Dataset Endpoints
 app:match("/dataset(/:id)", respond_to({
 	before = function(self)
+		local Dataset = require("models/dataset")
 		if type(self.params.id) ~= null then
 			self.dataset = Dataset:find(self.params.id)
 			if not self.dataset then
@@ -79,7 +80,7 @@ app:match("/dataset(/:id)", respond_to({
 app:match("/train(/:id)", respond_to({
 	before = function(self)
 		if type(self.params.id) ~= null then
-			self.dataset = Dataset:find(self.params.id)
+			self.dataset = TrainingSession:find(self.params.id)
 			if not self.dataset then
 				self:write({"Not Found", status = 404})
 			end
@@ -95,6 +96,11 @@ app:match("/train(/:id)", respond_to({
 		-- Delete Training Session.
 	end
 }))
+
+-- 404 Wildcard Endpoint
+app:get("/(*)", function(self)
+	self:write({"Not Found", status = 404})
+end)
 
 
 return app
