@@ -91,7 +91,7 @@ app:match("/train(/:id)", respond_to({
 		-- Return all Training Sessions or single Training Session.
 		return {
 			json = {
-				["Result"] = self.dataset || TrainingSession:select(nil)
+				["Result"] = (self.dataset || TrainingSession:select(nil))
 			}
 		}
 	end,
