@@ -48,7 +48,7 @@ app:get("/predict", function(self)
 	-- We'll make a nice output later, giving the labels not the label index.
 	return {
 		json = {
-			["confidences"] = (100 - math.max(confidences[1],1))/100,
+			-- ["confidences"] = (100 - math.max(confidences[1],1))/100,
 			["prediction"] = indices[1]
 		}
 	}
@@ -77,6 +77,7 @@ app:match("/dataset(/:id)", respond_to({
 	POST = json_params(function(self)
 		-- Create new dataset.
 		Dataset:create({
+			["id"] = hmac_sha1(os.time(), self.params.name),
 			["name"] = self.params.name,
 			["type"] = self.params.type,
 			["data_location"] = self.params.data_location,
