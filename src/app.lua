@@ -67,9 +67,22 @@ app:match("/dataset(/:id)", respond_to({
 	end,
 	GET = function(self)
 		-- Return all datasets or single dataset.
+		local results = self.dataset || Dataset:select(nil)
+		return {
+			json = {
+				["Result"] = results
+			}
+		}
 	end,
 	POST = json_params(function(self)
 		-- Create new dataset.
+		Dataset:create({
+			["name"] = self.params.name,
+			["type"] = self.params.type,
+			["data_location"] = self.params.data_location,
+			["alphabet"] = self.params.alphabet,
+			["max_length"] = self.params.max_length
+		});
 	end),
 	DELETE = function(self)
 		-- Delete dataset.
@@ -89,9 +102,10 @@ app:match("/train(/:id)", respond_to({
 	end,
 	GET = function(self)
 		-- Return all Training Sessions or single Training Session.
+		local results = self.dataset || TrainingSession:select(nil)
 		return {
 			json = {
-				["Result"] = TrainingSession:select(nil)
+				["Result"] = results
 			}
 		}
 	end,
